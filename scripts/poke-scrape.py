@@ -14,18 +14,22 @@ options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920,1080)
 
-for i in range(1,1011):
-    driver.get(f'https://pokemondb.net/pokedex/{i}')
-    img = driver.find_element(By.CSS_SELECTOR, 'main picture img')
-    name = driver.find_element(By.CSS_SELECTOR, 'main h1').text
-    print(f"{i}-{name}")
-    img_url = img.get_attribute('src')
-    response = requests.get(img_url, stream=True)
-    response.raise_for_status()
+for i in range(3,1011):
+    try:
+        driver.get(f'https://pokemondb.net/pokedex/{i}')
+        img = driver.find_element(By.CSS_SELECTOR, 'main picture img')
+        name = driver.find_element(By.CSS_SELECTOR, 'main h1').text
+        print(f"{i}-{name}")
+        img_url = img.get_attribute('src')
+        response = requests.get(img_url, stream=True)
+        response.raise_for_status()
 
-    with open(f'./../images/{i}-{name}.jpg', 'wb') as file:
-        for chunk in response.iter_content(8192):
-            file.write(chunk)
+        with open(f'./../images/{i}-{name}.jpg', 'wb') as file:
+            for chunk in response.iter_content(8192):
+                file.write(chunk)
+    except Exception as e:
+        print(f"Error {i}: {e}")
+        continue
     
 
 driver.quit()
