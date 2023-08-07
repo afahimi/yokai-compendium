@@ -14,6 +14,8 @@ json_string = json.dumps(names)
 with open("./pokemon.json", "w") as f:
     f.write(json_string)
 
+data2 = requests.get("https://pokeapi.co/api/v2/pokemon/charmander").json()
+
 print(names)
 
 # print(names)
