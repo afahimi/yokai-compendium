@@ -14,7 +14,7 @@ options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920,1080)
 
-for i in range(3,1011):
+for i in range(1,1011):
     try:
         driver.get(f'https://pokemondb.net/pokedex/{i}')
         img = driver.find_element(By.CSS_SELECTOR, 'main picture img')
