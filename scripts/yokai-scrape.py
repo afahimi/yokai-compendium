@@ -7,7 +7,7 @@ import requests
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
 options.add_argument('--log-level=3')
-# options.add_argument('--headless')
+options.add_argument('--headless')
 
 
 driver = webdriver.Chrome(options=options)
@@ -24,14 +24,49 @@ def getImages(name: str):
             for chunk in response.iter_content(8192):
                 file.write(chunk)
         
+attributes = {}
 
 driver.get("https://yokaiwatch.github.io/characters/#/view/1")
 time.sleep(1)
 base = driver.find_element(By.CSS_SELECTOR, 'body > div > div:nth-of-type(2) > div > div > div')
-name = base.find_element(By.CSS_SELECTOR, 'div').text
+attributes["name"] = base.find_element(By.CSS_SELECTOR, 'div').text
 rest = base.find_element(By.CSS_SELECTOR, 'div:nth-of-type(2)')
-print(rest.get_attribute("class"))
-print("done")
+t1 = rest.find_element(By.CSS_SELECTOR, 'div:nth-of-type(2) > table > tbody > tr:nth-of-type(2)')
+elements = t1.find_elements(By.XPATH, './*')
+
+attributes['class'] = elements[0].text
+attributes['rank'] = elements[1].text
+attributes['element'] = elements[2].text
+
+t1 = rest.find_element(By.CSS_SELECTOR, 'div:nth-of-type(2) > table > tbody > tr:nth-of-type(4)')
+elements = t1.find_elements(By.XPATH, './*')
+
+attributes['food'] = elements[0].text
+attributes['phrase'] = elements[2].text
+
+stats = {}
+
+st = rest.find_element(By.CSS_SELECTOR, "div:nth-of-type(3) > table > tbody")
+l1 = st.find_element(By.CSS_SELECTOR, "tr").find_elements(By.XPATH, './*')
+l99 = st.find_element(By.CSS_SELECTOR, "tr:nth-of-type(2)").find_elements(By.XPATH, './*')
+
+stats["HP"] = (l1[1].text, l99[1].text)
+stats["strength"] = (l1[2].text, l99[2].text)
+stats["spirit"] = (l1[3].text, l99[3].text)
+stats["defense"] = (l1[4].text, l99[4].text)
+stats["speed"] = (l1[5].text, l99[5].text)
+
+attributes['stats'] = stats
+
+
+
+print(stats)
+
+print(attributes)
+
+
+print(t1.get_attribute("class"))
+print(attributes['class'])
 time.sleep(5)
 
 # getImages()
