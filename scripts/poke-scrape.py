@@ -24,7 +24,7 @@ for i in range(1,1011):
         response = requests.get(img_url, stream=True)
         response.raise_for_status()
 
-        with open(f'./../images/{i}-{name}.jpg', 'wb') as file:
+        with open(f'./../pokemon/{i}-{name}.jpg', 'wb') as file:
             for chunk in response.iter_content(8192):
                 file.write(chunk)
     except Exception as e:
