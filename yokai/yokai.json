@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Pandle",
+    "class": "Brave",
+    "rank": "E",
+    "element": "Fire",
+    "food": "Rice Balls",
+    "phrase": "Nap time!",
+    "stats": {
+      "HP": ["33", "319"],
+      "strength": ["9", "160"],
+      "spirit": ["5", "70"],
+      "defense": ["6", "82"],
+      "speed": ["8", "130"]
+    },
+    "attacks": {
+      "normal": { "name": "Pesky Poke", "power": "15 - 67" },
+      "technique": {
+        "name": "Fire",
+        "power": "18 x 5 - 18 x 5",
+        "range": "All Enemies",
+        "attribute": "None",
+        "effect": "Pokes his foes with his beloved toothpick."
+      },
+      "soultimate": { "name": "Pointy Toothpick" },
+      "inspirit": {
+        "name": "Careless",
+        "effect": "Makes an opponent careless and decreases its Defense."
+      },
+      "skill": {
+        "name": "Careless",
+        "effect": "Prone to be dealt critical attacks."
+      }
+    }
+  }
+]

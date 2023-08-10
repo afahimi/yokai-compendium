@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import requests
+import json
 
 
 options = webdriver.ChromeOptions()
@@ -23,7 +24,10 @@ def getImages(name: str):
         with open(f'./../yokai/{i}-{name}.jpg', 'wb') as file:
             for chunk in response.iter_content(8192):
                 file.write(chunk)
-        
+
+
+yokai = []
+
 attributes = {}
 
 driver.get("https://yokaiwatch.github.io/characters/#/view/1")
@@ -55,18 +59,56 @@ stats["strength"] = (l1[2].text, l99[2].text)
 stats["spirit"] = (l1[3].text, l99[3].text)
 stats["defense"] = (l1[4].text, l99[4].text)
 stats["speed"] = (l1[5].text, l99[5].text)
-
 attributes['stats'] = stats
+attributes["attacks"] = {}
 
+#normal attack
+attk = rest.find_element(By.CSS_SELECTOR, "div:nth-of-type(5) > table > tbody")
+attk = attk.find_elements(By.XPATH, "./*")
+attributes["attacks"]["normal"] = {}
+attributes["attacks"]["normal"]["name"] = attk[0].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > strong").text
+attributes["attacks"]["normal"]["power"] = attk[1].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
 
+#technique
+attk = rest.find_element(By.CSS_SELECTOR, "div:nth-of-type(6) > table > tbody")
+attk = attk.find_elements(By.XPATH, "./*")
+attributes["attacks"]["technique"] = {}
+attributes["attacks"]["technique"]["name"] = attk[0].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > strong").text
+attributes["attacks"]["technique"]["power"] = attk[1].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
+attributes["attacks"]["technique"]["range"] = attk[2].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
 
-print(stats)
+#soultimate
+attk = rest.find_element(By.CSS_SELECTOR, "div:nth-of-type(7) > table > tbody")
+attk = attk.find_elements(By.XPATH, "./*")
+attributes["attacks"]["soultimate"] = {}
+attributes["attacks"]["soultimate"]["name"] = attk[0].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > strong").text
+attributes["attacks"]["technique"]["attribute"] = attk[1].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
+attributes["attacks"]["technique"]["power"] = attk[2].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
+attributes["attacks"]["technique"]["effect"] = attk[3].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
+attributes["attacks"]["technique"]["range"] = attk[4].find_element(By.CSS_SELECTOR, "td:nth-of-type(2) > div").text
 
-print(attributes)
+#inspirit
+attk = rest.find_element(By.CSS_SELECTOR, "div:nth-of-type(8) > table > tbody > tr > td:nth-of-type(2)")
+attributes["attacks"]["inspirit"] = {}
+attributes["attacks"]["inspirit"]["name"] = attk.find_element(By.CSS_SELECTOR, "strong").text
+attributes["attacks"]["inspirit"]["effect"] = attk.find_element(By.CSS_SELECTOR, "div").text
 
+#skill
+attk = rest.find_element(By.CSS_SELECTOR, "div:nth-of-type(9) > table > tbody > tr > td:nth-of-type(2)")
+attributes["attacks"]["skill"] = {}
+attributes["attacks"]["skill"]["name"] = attk.find_element(By.CSS_SELECTOR, "strong").text
+attributes["attacks"]["skill"]["effect"] = attk.find_element(By.CSS_SELECTOR, "div").text
 
-print(t1.get_attribute("class"))
-print(attributes['class'])
+yokai.append(attributes)
+
+file_path = "./../yokai/yokai.json"
+
+with open(file_path, 'w') as file:
+    json.dump(yokai, file)
+
+print(attributes["attacks"]["skill"])
+print(attributes["attacks"]["normal"])
+
 time.sleep(5)
 
 # getImages()
