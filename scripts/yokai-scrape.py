@@ -110,12 +110,10 @@ def getStats():
 if __name__ == "__main__":
     file_path = "./../yokai/yokai.json"
 
-    # with open(file_path, 'w') as file:
-    #     json.dump(getStats(), file)
+    with open(file_path, 'w') as file:
+        json.dump(getStats(), file)
 
     with open(file_path, 'r') as file:
         data = json.load(file)
-    
-    print(data[0]["name"])
 
     getImages(data)
