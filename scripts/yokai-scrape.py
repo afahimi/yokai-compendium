@@ -14,14 +14,17 @@ options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920,1080)
 
-def getImages(name: str):
+def getImages(obj):
     for i in range(1,355):
+        if i == 200:
+            print("Kyrin not available on the database, please download manually")
+            continue
+        name = obj[i-1]["name"]
         num_str = str(i).zfill(3)
         response = requests.get(f"http://yokaiwatch.github.io/common/Images/{num_str}.png", stream=True)
         response.raise_for_status()
-        time.sleep(3)
 
-        with open(f'./../yokai/{i}-{name}.jpg', 'wb') as file:
+        with open(f'./../yokai/images/{i}-{name}.jpg', 'wb') as file:
             for chunk in response.iter_content(8192):
                 file.write(chunk)
 
@@ -104,10 +107,15 @@ def getStats():
         yokai.append(attributes)
     return yokai
 
-file_path = "./../yokai/yokai.json"
+if __name__ == "__main__":
+    file_path = "./../yokai/yokai.json"
 
-with open(file_path, 'w') as file:
-    json.dump(getStats(), file)
+    # with open(file_path, 'w') as file:
+    #     json.dump(getStats(), file)
 
-time.sleep(5)
-# getImages()
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    
+    print(data[0]["name"])
+
+    getImages(data)
