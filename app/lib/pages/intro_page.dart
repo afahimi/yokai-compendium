@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class IntroPage extends StatelessWidget {
-  const IntroPage({Key? key}) : super(key: key);
+  const IntroPage(this.updatePage, {Key? key}) : super(key: key);
+
+  final void Function(String page) updatePage;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,9 @@ class IntroPage extends StatelessWidget {
             const SizedBox(height: 20),
             Center(
                 child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                updatePage("yokai");
+              },
               icon: Image.asset(
                 "assets/yokai_watch_icon.png",
                 width: 30,

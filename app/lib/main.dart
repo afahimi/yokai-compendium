@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/intro_page.dart';
+import 'package:app/page_router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,8 +10,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: IntroPage(),
+    return MaterialApp(
+      home: PageRouter(),
     );
   }
 }
