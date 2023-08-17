@@ -14,18 +14,18 @@ class PageRouter extends StatefulWidget {
 class _PageState extends State<PageRouter> {
   Map<String, Widget> get pages => {
         "intro": IntroPage(updatePage),
-        "yokai": const YokaiPage(),
+        "yokai": YokaiPage(updatePage),
       };
 
   Widget getPage() {
-    Widget? page;
-    if (widget.page == "yokai") {
-      page = pages["yokai"];
-    } else {
-      page = pages["intro"];
-    }
-    return page ?? const SizedBox();
+  Widget? page;
+  if (widget.page == "yokai") {
+    page = KeyedSubtree(key: const ValueKey("yokai"), child: pages["yokai"]!);
+  } else {
+    page = KeyedSubtree(key: const ValueKey("intro"), child: pages["intro"]!);
   }
+  return page ?? const SizedBox();
+}
 
   void updatePage(String page) {
     setState(() {
@@ -35,6 +35,9 @@ class _PageState extends State<PageRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return getPage();
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300), // Transition duration
+      child: getPage(),
+    );
   }
 }
