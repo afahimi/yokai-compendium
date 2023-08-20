@@ -64,6 +64,23 @@ flutter:
     - assets/yokai_watch.png
     - assets/yokai_watch_icon.png
     - assets/yokai.json
+    - assets/ranks/Rank_S_icon.PNG.png
+    - assets/ranks/Rank_A_icon.PNG.png
+    - assets/ranks/Rank_B_icon.PNG.png
+    - assets/ranks/Rank_C_icon.PNG.png
+    - assets/ranks/Rank_D_icon.PNG.png
+    - assets/ranks/Rank_E_icon.PNG.png
+    - assets/ranks/Brave.png
+    - assets/ranks/Charming.png
+    - assets/ranks/Heartful.png
+    - assets/ranks/Mysterious.png
+    - assets/ranks/Shady.png
+    - assets/ranks/Tough.png
+    - assets/ranks/Slippery.png
+    - assets/ranks/Charming.png
+    - assets/ranks/Eerie.png
+    - assets/icons/
+    - assets/attributes/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

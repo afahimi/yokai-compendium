@@ -14,6 +14,68 @@ options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920,1080)
 
+def getIcons():
+    driver.get("https://yokaiwatch.fandom.com/wiki/List_of_Yo-kai_by_Medallium_Number_(Yo-kai_Watch_2)")
+    base = driver.find_element(By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main').find_element(By.CLASS_NAME, 'mw-parser-output')
+    images = []
+
+
+    for i in range(1,10):
+        table1 = base.find_element(By.CSS_SELECTOR, f'table:nth-of-type({i}) > tbody')
+        rows = table1.find_elements(By.XPATH, './/tr')
+        for i in range(len(rows)):
+            if(i == 0):
+                continue
+            row = rows[i]
+            img = row.find_element(By.CSS_SELECTOR, 'td:nth-of-type(2) > img')
+            src = img.get_attribute('data-src')
+            images.append(src)
+
+    print(images)
+
+    for i in range(len(images)):
+        if images[i] == None:
+            continue
+        response = requests.get(images[i], stream=True)
+        response.raise_for_status()
+
+        with open(f'./../yokai/icons/{i+1}.png', 'wb') as file:
+            for chunk in response.iter_content(8192):
+                file.write(chunk)
+    
+    driver.quit()
+
+def getAttributes():
+    driver.get("https://yokaiwatch.fandom.com/wiki/List_of_Yo-kai_by_Medallium_Number_(Yo-kai_Watch_2)")
+    base = driver.find_element(By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main').find_element(By.CLASS_NAME, 'mw-parser-output')
+    images = []
+
+
+    for i in range(1,10):
+        table1 = base.find_element(By.CSS_SELECTOR, f'table:nth-of-type({i}) > tbody')
+        rows = table1.find_elements(By.XPATH, './/tr')
+        for i in range(len(rows)):
+            if(i == 0):
+                continue
+            row = rows[i]
+            img = row.find_element(By.CSS_SELECTOR, 'td:nth-of-type(6) > a > img')
+            src = img.get_attribute('data-src')
+            images.append(src)
+
+    print(images)
+
+    for i in range(len(images)):
+        if images[i] == None:
+            continue
+        response = requests.get(images[i], stream=True)
+        response.raise_for_status()
+
+        with open(f'./../yokai/attributes/{i+1}.png', 'wb') as file:
+            for chunk in response.iter_content(8192):
+                file.write(chunk)
+    
+    driver.quit()
+
 def getImages(obj):
     for i in range(1,355):
         if i == 200:
@@ -108,12 +170,14 @@ def getStats():
     return yokai
 
 if __name__ == "__main__":
-    file_path = "./../yokai/yokai.json"
+    # file_path = "./../yokai/yokai.json"
 
-    with open(file_path, 'w') as file:
-        json.dump(getStats(), file)
+    # with open(file_path, 'w') as file:
+    #     json.dump(getStats(), file)
 
-    with open(file_path, 'r') as file:
-        data = json.load(file)
+    # with open(file_path, 'r') as file:
+    #     data = json.load(file)
 
-    getImages(data)
+    # getImages(data)
+    # getIcons()
+    getAttributes()

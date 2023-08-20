@@ -1,3 +1,4 @@
+import 'package:app/components/yokai_listing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../components/yokai.dart';
@@ -90,10 +91,11 @@ class _YokaiPageState extends State<YokaiPage> {
           itemCount: filteredYokaiList.length,
           itemBuilder: (context, index) {
             Yokai yokai = filteredYokaiList[index];
-            return ListTile(
-              title: Text(yokai.name),
-              subtitle: Text('Rank: ${yokai.rank}, Class: ${yokai.yokaiClass}'),
-            );
+            return YokaiListing(
+                number: yokai.number,
+                name: yokai.name,
+                rank: yokai.rank,
+                yokaiClass: yokai.yokaiClass);
           },
         ),
       ),
