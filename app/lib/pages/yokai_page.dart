@@ -1,4 +1,5 @@
 import 'package:app/components/yokai_listing.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../components/yokai.dart';
@@ -18,8 +19,9 @@ Future<List<Yokai>> parseYokai() async {
 
 class YokaiPage extends StatefulWidget {
   final void Function(String) updatePage;
+  final void Function(Yokai) updateSelectedYokaiandNavigate;
 
-  const YokaiPage(this.updatePage, {Key? key}) : super(key: key);
+  const YokaiPage(this.updatePage, this.updateSelectedYokaiandNavigate, {Key? key}) : super(key: key);
 
   @override
   _YokaiPageState createState() => _YokaiPageState();
@@ -34,19 +36,88 @@ class _YokaiPageState extends State<YokaiPage> {
 
   Future<void> initializeYokai() async {
     yokaiList = await parseYokai();
-    filteredYokaiList = yokaiList.where((yokai) {
+    sortedYokaiList = sortYokai(yokaiList, selectedOption);
+    filteredYokaiList = sortedYokaiList.where((yokai) {
       return yokai.name.toLowerCase().contains(searchQuery.toLowerCase());
     }).toList();
     setState(() {});
   }
 
+  Widget _buildOptionTile(String value, String title) {
+    return CheckboxListTile(
+      title: Text(title),
+      value: selectedOption == value,
+      onChanged: (bool? isChecked) {
+        if (isChecked == true) {
+          setState(() {
+            selectedOption = value;
+            sortedYokaiList = sortYokai(yokaiList, selectedOption);
+            filteredYokaiList = sortedYokaiList.where((yokai) {
+              return yokai.name
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase());
+            }).toList();
+          });
+        }
+        // Close the drawer
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  List<Yokai> sortYokai(List<Yokai> yokaiList, String option) {
+    List<Yokai> sortedList = List.from(yokaiList);
+    if (option == 'By Compendium Number') {
+      sortedList.sort((a, b) => a.number.compareTo(b.number));
+    } else if (option == 'By Rank (Descending)') {
+      const rankOrder = {'S': 0, 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5};
+      sortedList
+          .sort((a, b) => rankOrder[a.rank]!.compareTo(rankOrder[b.rank]!));
+    } else if (option == 'By Rank (Ascending)') {
+      const rankOrder = {'E': 0, 'D': 1, 'C': 2, 'B': 3, 'A': 4, 'S': 5};
+      sortedList
+          .sort((a, b) => rankOrder[a.rank]!.compareTo(rankOrder[b.rank]!));
+    } else if (option == 'By Name') {
+      sortedList.sort((a, b) => a.name.compareTo(b.name));
+    }
+    return sortedList;
+  }
+
+  String selectedOption = 'By Compendium Number';
   String searchQuery = "";
   List<Yokai> yokaiList = [];
+  List<Yokai> sortedYokaiList = [];
   List<Yokai> filteredYokaiList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 28, 197, 253),
+              ),
+              child: Center(
+                child: Text(
+                  'Filter Options',
+                  style: GoogleFonts.pacifico(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            _buildOptionTile('By Compendium Number', 'By Compendium Number'),
+            _buildOptionTile('By Rank (Descending)', 'By Rank (Descending)'),
+            _buildOptionTile('By Rank (Ascending)', 'By Rank (Ascending)'),
+            _buildOptionTile('By Name', 'By Name'),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Row(
           children: [
@@ -72,7 +143,7 @@ class _YokaiPageState extends State<YokaiPage> {
                 onChanged: (text) {
                   setState(() {
                     searchQuery = text;
-                    filteredYokaiList = yokaiList.where((yokai) {
+                    filteredYokaiList = sortedYokaiList.where((yokai) {
                       return yokai.name
                           .toLowerCase()
                           .contains(searchQuery.toLowerCase());
@@ -91,11 +162,17 @@ class _YokaiPageState extends State<YokaiPage> {
           itemCount: filteredYokaiList.length,
           itemBuilder: (context, index) {
             Yokai yokai = filteredYokaiList[index];
-            return YokaiListing(
-                number: yokai.number,
-                name: yokai.name,
-                rank: yokai.rank,
-                yokaiClass: yokai.yokaiClass);
+            return GestureDetector(
+              onTap: () {
+                widget.updateSelectedYokaiandNavigate(yokai);
+              },
+              child: YokaiListing(
+              number: yokai.number,
+              name: yokai.name,
+              rank: yokai.rank,
+              yokaiClass: yokai.yokaiClass,
+            ),
+            );
           },
         ),
       ),

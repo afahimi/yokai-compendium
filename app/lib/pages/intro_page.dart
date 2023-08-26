@@ -26,7 +26,7 @@ class IntroPage extends StatelessWidget {
             const SizedBox(height: 20),
             Image.asset(
               'assets/yokai_watch.png',
-              width: 200, // You can adjust the size as needed
+              width: 200,
             ),
             const SizedBox(height: 20),
             Center(
