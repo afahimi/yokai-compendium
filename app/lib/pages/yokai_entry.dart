@@ -68,42 +68,77 @@ class YokaiEntry extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,
-              color: colorMap[yokai.yokaiClass],
               child: Center(
                 child: buildImage("images", yokai.name, yokai.number),
               ),
             ),
-            // General Info Section
-            buildSection('General Info', [
-              'Name: ${yokai.name}',
-              'Class: ${yokai.yokaiClass}',
-              // add other general info here
-            ]),
-            // Stats Section
-            buildSection('Stats', [
-              'HP: ${yokai.HP}',
-              'Attack: ${yokai.strength}',
-              // add other stats here
-            ]),
-            // Attacks/Techniques Section
-            buildSection('Attacks/Techniques', [
-              'Technique: ${yokai.technique}}',
-              'Soultimate: ${yokai.soultimate}',
-              // add other attacks/techniques here
-            ]),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 28, 197, 253),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Text(
+                "${yokai.number} - ${yokai.name}",
+                style: GoogleFonts.roboto(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 3,
+            ),
+            buildSection(
+              'General Info',
+              [
+                'Name: ${yokai.name}',
+                'Class: ${yokai.yokaiClass}',
+                'Rank: ${yokai.rank}',
+                'Element: ${yokai.element}',
+                'Favorite Food: ${yokai.food}',
+                'Phrase: ${yokai.phrase != "" ? '"${yokai.phrase}"' : 'N/A'}',
+              ],
+              context,
+            ),
+            buildSection(
+              'Stats',
+              [
+                'HP: ${yokai.HP[0]} - ${yokai.HP[1]}',
+                'Attack: ${yokai.strength[0]} - ${yokai.strength[1]}',
+                'Spirit: ${yokai.spirit[0]} - ${yokai.spirit[1]}',
+                'Defense: ${yokai.defense[0]} - ${yokai.defense[1]}',
+                'Speed: ${yokai.speed[0]} - ${yokai.speed[1]}',
+              ],
+              context,
+            ),
+            buildSection(
+              'Attacks/Techniques',
+              [
+                'Normal Attack: ${yokai.normalAttack["name"]}',
+                'Technique: ${yokai.technique["name"]}',
+                'Soultimate: ${yokai.soultimate["name"]}',
+              ],
+              context,
+            ),
           ],
         ),
       ),
-      backgroundColor: const Color.fromARGB(255, 28, 197, 253),
+      backgroundColor: colorMap[yokai.yokaiClass],
     );
   }
 }
 
-Widget buildSection(String title, List<String> details) {
+Widget buildSection(String title, List<String> details, BuildContext context) {
   return Container(
-    margin: const EdgeInsets.all(16.0),
+    width: double.infinity,
+    margin: const EdgeInsets.only(
+      top: 5.0,
+      bottom: 5.0,
+    ),
     padding: const EdgeInsets.all(16.0),
     decoration: BoxDecoration(
       color: Colors.white,
@@ -120,12 +155,22 @@ Widget buildSection(String title, List<String> details) {
             color: Colors.black,
           ),
         ),
-        ...details.map((detail) => Text(
-              detail,
-              style: GoogleFonts.roboto(
-                fontSize: 16,
-                color: Colors.black54,
-              ),
+        const SizedBox(
+          height: 10,
+        ),
+        ...details.map((detail) => Column(
+              children: [
+                Text(
+                  detail,
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
             )),
       ],
     ),

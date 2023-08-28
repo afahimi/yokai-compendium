@@ -3,13 +3,43 @@ class Yokai {
   final String name;
   final String rank;
   final String yokaiClass;
-  final String strength;
-  final String HP;
-  final String technique;
-  final String soultimate;
+  final String element;
+  final String food;
+  final String phrase;
 
-  Yokai(this.number, this.name, this.rank, this.yokaiClass, this.strength,
-      this.HP, this.technique, this.soultimate);
+  // Stats
+  final List<String> HP;
+  final List<String> strength;
+  final List<String> spirit;
+  final List<String> defense;
+  final List<String> speed;
+
+  // Attacks
+  final Map<String, dynamic> normalAttack;
+  final Map<String, dynamic> technique;
+  final Map<String, dynamic> soultimate;
+  final Map<String, dynamic> inspirit;
+  final Map<String, dynamic> skill;
+
+  Yokai(
+    this.number,
+    this.name,
+    this.rank,
+    this.yokaiClass,
+    this.element,
+    this.food,
+    this.phrase,
+    this.HP,
+    this.strength,
+    this.spirit,
+    this.defense,
+    this.speed,
+    this.normalAttack,
+    this.technique,
+    this.soultimate,
+    this.inspirit,
+    this.skill,
+  );
 
   factory Yokai.fromJson(Map<String, dynamic> json) {
     return Yokai(
@@ -17,10 +47,19 @@ class Yokai {
       json['name'],
       json['rank'],
       json['class'],
-      json['stats']['strength'][0],
-      json['stats']['HP'][0],
-      json['attacks']['technique']["name"],
-      json['attacks']['soultimate']["name"],
+      json['element'],
+      json['food'],
+      json['phrase'],
+      List<String>.from(json['stats']['HP']),
+      List<String>.from(json['stats']['strength']),
+      List<String>.from(json['stats']['spirit']),
+      List<String>.from(json['stats']['defense']),
+      List<String>.from(json['stats']['speed']),
+      json['attacks']['normal'],
+      json['attacks']['technique'],
+      json['attacks']['soultimate'],
+      json['attacks']['inspirit'],
+      json['attacks']['skill'],
     );
   }
 }
