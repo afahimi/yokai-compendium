@@ -74,29 +74,13 @@ class YokaiEntry extends StatelessWidget {
                 child: buildImage("images", yokai.name, yokai.number),
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 28, 197, 253),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Text(
-                "${yokai.number} - ${yokai.name}",
-                style: GoogleFonts.roboto(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+            buildTitle(
+              '${yokai.number} - ${yokai.name}',
+              const Color.fromARGB(255, 28, 197, 253),
             ),
-            const SizedBox(
-              height: 3,
-            ),
-            buildSection(
-              'General Info',
+            buildTextBox(
               [
-                'Name: ${yokai.name}',
-                'Class: ${yokai.yokaiClass}',
+                'Tribe: ${yokai.yokaiClass}',
                 'Rank: ${yokai.rank}',
                 'Element: ${yokai.element}',
                 'Favorite Food: ${yokai.food}',
@@ -104,8 +88,14 @@ class YokaiEntry extends StatelessWidget {
               ],
               context,
             ),
-            buildSection(
-              'Stats',
+            const SizedBox(
+              height: 5,
+            ),
+            buildTitle(
+              "Stats",
+              const Color.fromARGB(255, 253, 28, 106),
+            ),
+            buildTextBox(
               [
                 'HP: ${yokai.HP[0]} - ${yokai.HP[1]}',
                 'Attack: ${yokai.strength[0]} - ${yokai.strength[1]}',
@@ -115,12 +105,77 @@ class YokaiEntry extends StatelessWidget {
               ],
               context,
             ),
-            buildSection(
-              'Attacks/Techniques',
+            const SizedBox(
+              height: 5,
+            ),
+            buildTitle(
+              "Normal Attack",
+              const Color.fromARGB(255, 253, 160, 28),
+            ),
+            buildTextBox(
               [
-                'Normal Attack: ${yokai.normalAttack["name"]}',
-                'Technique: ${yokai.technique["name"]}',
-                'Soultimate: ${yokai.soultimate["name"]}',
+                'Name: ${yokai.normalAttack["name"]}',
+                'Power: ${yokai.normalAttack["power"]}',
+              ],
+              context,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            buildTitle(
+              "Technique",
+              const Color.fromARGB(255, 28, 253, 73),
+            ),
+            buildTextBox(
+              [
+                'Name: ${yokai.technique["name"]}',
+                'Power: ${yokai.technique["power"]}',
+                'Range: ${yokai.technique["range"]}',
+              ],
+              context,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            buildTitle(
+              "Soultimate",
+              const Color.fromARGB(255, 230, 28, 253),
+            ),
+            buildTextBox(
+              [
+                'Name: ${yokai.soultimate["name"]}',
+                'Attribute: ${yokai.soultimate["attribute"]}',
+                'Power: ${yokai.soultimate["power"]}',
+                'Effect: ${yokai.soultimate["effect"]}',
+                'Range: ${yokai.soultimate["range"]}',
+              ],
+              context,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            buildTitle(
+              "Inspirit",
+              const Color.fromARGB(255, 253, 223, 28),
+            ),
+            buildTextBox(
+              [
+                'Name: ${yokai.inspirit["name"]}',
+                'Effect: ${yokai.inspirit["effect"]}',
+              ],
+              context,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            buildTitle(
+              "Skill",
+              const Color.fromARGB(255, 253, 28, 111),
+            ),
+            buildTextBox(
+              [
+                'Name: ${yokai.skill["name"]}',
+                'Effect: ${yokai.skill["effect"]}',
               ],
               context,
             ),
@@ -173,6 +228,62 @@ Widget buildSection(String title, List<String> details, BuildContext context) {
               ],
             )),
       ],
+    ),
+  );
+}
+
+Widget buildTextBox(List<String> details, BuildContext context) {
+  return Container(
+    width: double.infinity,
+    margin: const EdgeInsets.only(
+      top: 5.0,
+      bottom: 5.0,
+    ),
+    padding: const EdgeInsets.all(16.0),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ...details.map((detail) => Column(
+              children: [
+                Text(
+                  detail,
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            )),
+      ],
+    ),
+  );
+}
+
+Widget buildTitle(String title, Color color) {
+  return Container(
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(10.0),
+      border: Border.all(
+        color: Colors.black,
+        width: 2,
+      ),
+    ),
+    child: Text(
+      title,
+      style: GoogleFonts.roboto(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
     ),
   );
 }
