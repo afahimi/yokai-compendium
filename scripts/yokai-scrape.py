@@ -1,5 +1,8 @@
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 import requests
 import json
@@ -90,6 +93,78 @@ def getImages(obj):
             for chunk in response.iter_content(8192):
                 file.write(chunk)
 
+
+def getLinks3():
+    hrefs = []
+
+    driver.get("https://yokaiwatch.fandom.com/wiki/List_of_Yo-kai_by_Medallium_Number_(Yo-kai_Watch_3)")
+    base = driver.find_element(By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main').find_element(By.CLASS_NAME, 'mw-parser-output')
+
+    time.sleep(5)
+
+    for i in range(1,14):
+        table1 = base.find_element(By.CSS_SELECTOR, f'table:nth-of-type({i}) > tbody')
+        rows = table1.find_elements(By.XPATH, './/tr')
+        for j in range(len(rows)):
+            if(j == 0):
+                continue
+            row = rows[j]
+            src = row.find_element(By.CSS_SELECTOR, 'td:nth-of-type(3) > a').get_attribute('href')
+            print(src)
+            hrefs.append(src)
+    # write json to a file
+    with open('./../yokai/yokai3links.json', 'w') as file:
+        json.dump(hrefs, file)
+
+def getStats3():
+    # getLinks3() # call if you want to get the links again
+    with open('./../yokai/yokai3links.json', 'r') as file:
+        data = json.load(file)
+    
+    yokai = []
+    images = []
+
+    for i in range(len(data)):
+        driver.get(data[i])
+        attributes = {}
+        attributes["number"] = i+1
+        
+        # Wait for the base element to be loaded
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main'))
+        )
+        
+        base = driver.find_element(By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main').find_element(By.CLASS_NAME, 'mw-parser-output')
+            
+        # name
+        attributes["name"] = base.find_element(By.CSS_SELECTOR, 'h2').text
+
+        # tribe
+        tribe_name = base.find_element(By.CSS_SELECTOR, 'aside > section > nav > a > img').get_attribute('alt')
+        start = tribe_name.find("WibWob") + len("WibWob")
+        end = tribe_name.find("Icon")
+        attributes["tribe"] = tribe_name[start:end].strip()
+        print(attributes["tribe"])
+
+        # rank
+        try:
+            rank_img = WebDriverWait(base, 10).until(
+                EC.presence_of_element_located((By.XPATH, ".//img[starts-with(@alt, 'Rank')]"))
+            )
+            attributes["rank"] = rank_img.get_attribute('alt')
+            start = attributes["rank"].find("Rank") + len("Rank")
+            end = attributes["rank"].find("icon")
+            attributes["rank"] = attributes["rank"][start:end].strip()
+        except TimeoutException:
+            attributes["rank"] = "Not Found"
+        # start = attributes["rank"].find("Rank") + len("Rank")
+        # end = attributes["rank"].find("Icon")
+        # attributes["rank"] = attributes["rank"][start:end].strip()
+        print(attributes["rank"])
+
+
+
+
 def getStats():
     yokai = []
 
@@ -170,14 +245,16 @@ def getStats():
     return yokai
 
 if __name__ == "__main__":
-    file_path = "./../yokai/yokai.json"
+    # file_path = "./../yokai/yokai.json"
 
-    with open(file_path, 'w') as file:
-        json.dump(getStats(), file)
+    # with open(file_path, 'w') as file:
+    #     json.dump(getStats(), file)
 
-    with open(file_path, 'r') as file:
-        data = json.load(file)
+    # with open(file_path, 'r') as file:
+    #     data = json.load(file)
 
-    getImages(data)
-    getIcons()
-    getAttributes()
+    # getImages(data)
+    # getIcons()
+    # getAttributes()
+
+    getStats3()
