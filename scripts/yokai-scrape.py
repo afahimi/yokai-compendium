@@ -162,6 +162,53 @@ def getStats3():
         # attributes["rank"] = attributes["rank"][start:end].strip()
         print(attributes["rank"])
 
+        # element
+        try:
+            rank_img = WebDriverWait(base, 10).until(
+                EC.presence_of_element_located((By.XPATH, 
+                    ".//img[substring(@alt, string-length(@alt) - string-length('icon') + 1) = 'icon' and not(starts-with(@alt, 'Rank'))]"))
+            )
+            attributes["element"] = rank_img.get_attribute('alt')
+            start = 0
+            end = attributes["element"].find("icon")
+            attributes["element"] = attributes["element"][start:end].strip()
+        except TimeoutException:
+            attributes["element"] = "Not Found"
+        print(attributes["element"])
+
+        # favorite food
+        try:
+            fav_food = WebDriverWait(base, 10).until(
+                EC.presence_of_element_located((By.XPATH, ".//div[starts-with(@data-source, 'food')]"))
+            )
+            attributes["food"] = fav_food.text
+        except TimeoutException:
+            attributes["food"] = "Not Found"
+        print(attributes["food"])
+
+        # quote
+        try:
+            quote = WebDriverWait(base, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Loafing:')]/following-sibling::*[1]"))
+            )
+            attributes["quote"] = quote.text
+        except TimeoutException:
+            attributes["quote"] = "Not Found"
+        print(attributes["quote"])
+
+        # stats
+        stats = {}
+        try:
+            rank_table = WebDriverWait(base, 10).until(
+                EC.presence_of_element_located((By.XPATH, 
+                    ".//table[substring(@class, string-length(@class) - string-length('roundy') + 1) = 'roundy']//*[@align='center']"))
+            )
+            print(rank_table.get_attribute('style'))           
+        except TimeoutException:
+            attributes["element"] = "Not Found"
+
+
+
 
 
 
