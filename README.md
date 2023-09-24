@@ -5,7 +5,7 @@
 Yokai Compendium is a Flutter-based mobile app that provides an exhaustive, dynamic list of Yokai—spirits, demons, and creatures from Japanese folklore. The app offers real-time database connectivity through Firestore, giving users an up-to-date, comprehensive overview of Yokai profiles.
 
 <img width="200" alt="Screenshot 2023-08-27 at 10 04 01 PM" src="https://github.com/afahimi/yokai-compendium/assets/90342512/175dc234-510f-4728-a6d5-800f5f23a50e">
-<img width="200" alt="Screenshot 2023-08-27 at 10 03 10 PM" src="https://github.com/afahimi/yokai-compendium/assets/90342512/cb28ca78-154b-4113-9819-a4b55200b7c8">
+<img width="200" alt="Screenshot 2023-08-27 at 10 04 03 PM" src="https://github.com/afahimi/yokai-compendium/assets/90342512/74bd944e-2df6-4c9e-8728-31bda8e9ddfa">
 <img width="200" alt="Screenshot 2023-08-27 at 10 03 40 PM" src="https://github.com/afahimi/yokai-compendium/assets/90342512/cc50d4ab-f153-47a4-a1e4-d35905560d4f">
 <img width="200" alt="Screenshot 2023-08-27 at 10 03 51 PM" src="https://github.com/afahimi/yokai-compendium/assets/90342512/76e84fed-ec9b-4177-849c-34423ef74c05">
 
