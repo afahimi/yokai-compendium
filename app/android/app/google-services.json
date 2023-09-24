@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "341366501414",
+    "project_id": "yo-kai-compendium",
+    "storage_bucket": "yo-kai-compendium.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341366501414:android:a92574478945e1cf3cf6e7",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW0b7u-cAUgoo9j0woc_pZkTA0JUYjJmc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

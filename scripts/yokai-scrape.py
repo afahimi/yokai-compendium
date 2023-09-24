@@ -124,89 +124,140 @@ def getStats3():
     yokai = []
     images = []
 
-    for i in range(len(data)):
-        driver.get(data[i])
-        attributes = {}
-        attributes["number"] = i+1
-        
-        # Wait for the base element to be loaded
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main'))
-        )
-        
-        base = driver.find_element(By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main').find_element(By.CLASS_NAME, 'mw-parser-output')
+    try:
+        for i in range(len(data)):
+            driver.get(data[i])
+            attributes = {}
+            attributes["number"] = i+1
             
-        # name
-        attributes["name"] = base.find_element(By.CSS_SELECTOR, 'h2').text
-
-        # tribe
-        tribe_name = base.find_element(By.CSS_SELECTOR, 'aside > section > nav > a > img').get_attribute('alt')
-        start = tribe_name.find("WibWob") + len("WibWob")
-        end = tribe_name.find("Icon")
-        attributes["tribe"] = tribe_name[start:end].strip()
-        print(attributes["tribe"])
-
-        # rank
-        try:
-            rank_img = WebDriverWait(base, 10).until(
-                EC.presence_of_element_located((By.XPATH, ".//img[starts-with(@alt, 'Rank')]"))
+            # Wait for the base element to be loaded
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main'))
             )
-            attributes["rank"] = rank_img.get_attribute('alt')
-            start = attributes["rank"].find("Rank") + len("Rank")
-            end = attributes["rank"].find("icon")
-            attributes["rank"] = attributes["rank"][start:end].strip()
-        except TimeoutException:
-            attributes["rank"] = "Not Found"
-        # start = attributes["rank"].find("Rank") + len("Rank")
-        # end = attributes["rank"].find("Icon")
-        # attributes["rank"] = attributes["rank"][start:end].strip()
-        print(attributes["rank"])
+            
+            base = driver.find_element(By.CSS_SELECTOR, 'body > div:nth-of-type(4) > div:nth-of-type(4) > div:nth-of-type(3) > main').find_element(By.CLASS_NAME, 'mw-parser-output')
+                
+            # name
+            attributes["name"] = base.find_element(By.CSS_SELECTOR, 'h2').text
+            print(attributes["name"])
 
-        # element
-        try:
-            rank_img = WebDriverWait(base, 10).until(
-                EC.presence_of_element_located((By.XPATH, 
-                    ".//img[substring(@alt, string-length(@alt) - string-length('icon') + 1) = 'icon' and not(starts-with(@alt, 'Rank'))]"))
-            )
-            attributes["element"] = rank_img.get_attribute('alt')
-            start = 0
-            end = attributes["element"].find("icon")
-            attributes["element"] = attributes["element"][start:end].strip()
-        except TimeoutException:
-            attributes["element"] = "Not Found"
-        print(attributes["element"])
+            # tribe
+            tribe_name = base.find_element(By.CSS_SELECTOR, 'aside > section > nav > a > img').get_attribute('alt')
+            start = tribe_name.find("WibWob") + len("WibWob")
+            end = tribe_name.find("Icon")
+            attributes["tribe"] = tribe_name[start:end].strip()
+            print(attributes["tribe"])
 
-        # favorite food
-        try:
-            fav_food = WebDriverWait(base, 10).until(
-                EC.presence_of_element_located((By.XPATH, ".//div[starts-with(@data-source, 'food')]"))
-            )
-            attributes["food"] = fav_food.text
-        except TimeoutException:
-            attributes["food"] = "Not Found"
-        print(attributes["food"])
+            # rank
+            try:
+                rank_img = WebDriverWait(base, 10).until(
+                    EC.presence_of_element_located((By.XPATH, ".//img[starts-with(@alt, 'Rank')]"))
+                )
+                attributes["rank"] = rank_img.get_attribute('alt')
+                start = attributes["rank"].find("Rank") + len("Rank")
+                end = attributes["rank"].find("icon")
+                attributes["rank"] = attributes["rank"][start:end].strip()
+            except Exception:
+                attributes["rank"] = "Not Found"
+            # start = attributes["rank"].find("Rank") + len("Rank")
+            # end = attributes["rank"].find("Icon")
+            # attributes["rank"] = attributes["rank"][start:end].strip()
+            print(attributes["rank"])
 
-        # quote
-        try:
-            quote = WebDriverWait(base, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Loafing:')]/following-sibling::*[1]"))
-            )
-            attributes["quote"] = quote.text
-        except TimeoutException:
-            attributes["quote"] = "Not Found"
-        print(attributes["quote"])
+            # element
+            try:
+                rank_img = WebDriverWait(base, 10).until(
+                    EC.presence_of_element_located((By.XPATH, 
+                        ".//img[substring(@alt, string-length(@alt) - string-length('icon') + 1) = 'icon' and not(starts-with(@alt, 'Rank'))]"))
+                )
+                attributes["element"] = rank_img.get_attribute('alt')
+                start = 0
+                end = attributes["element"].find("icon")
+                attributes["element"] = attributes["element"][start:end].strip()
+            except Exception:
+                attributes["element"] = "Not Found"
+            print(attributes["element"])
 
-        # stats
-        stats = {}
-        try:
-            rank_table = WebDriverWait(base, 10).until(
-                EC.presence_of_element_located((By.XPATH, 
-                    ".//table[substring(@class, string-length(@class) - string-length('roundy') + 1) = 'roundy']//*[@align='center']"))
-            )
-            print(rank_table.get_attribute('style'))           
-        except TimeoutException:
-            attributes["element"] = "Not Found"
+            # favorite food
+            try:
+                fav_food = WebDriverWait(base, 10).until(
+                    EC.presence_of_element_located((By.XPATH, ".//div[starts-with(@data-source, 'food')]"))
+                )
+                attributes["food"] = fav_food.text
+            except Exception:
+                attributes["food"] = "Not Found"
+            print(attributes["food"])
 
+            # quote
+            try:
+                time.sleep(5)
+                quote = WebDriverWait(base, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "ul:nth-of-type(3)"))
+                )
+                attributes["quote"] = quote.find_elements(By.XPATH, "./li")[1].find_element(By.TAG_NAME, "i").text
+            except Exception:
+                attributes["quote"] = "Not Found"
+            print(attributes["quote"])
+
+            # stats
+            stats = {}
+
+            stats["HP"] = "Not Found"
+            stats["strength"] = "Not Found"
+            stats["spirit"] = "Not Found"
+            stats["defense"] = "Not Found"
+            stats["speed"] = "Not Found"
+
+
+            # table = WebDriverWait(base, 20).until(
+            #     EC.presence_of_element_located((By.CSS_SELECTOR, "aside > section:nth-of-type(9) > section > section:nth-of-type(2)"))
+            # )
+
+            # table = base.find_element(By.CSS_SELECTOR, "aside > section:nth-of-type(9) > section > section:nth-of-type(2)")
+
+            # elems = table.find_elements(By.XPATH, "./div")
+            # stats["HP"] = elems[0].text
+            # stats["strength"] = elems[1].text
+            # stats["spirit"] = elems[2].text
+            # stats["defense"] = elems[3].text
+            # stats["speed"] = elems[4].text
+            
+            # attributes["stats"] = stats
+            # print(stats)
+
+
+
+            # stats
+            stats = {}
+            stats["HP"] = "Not Found"
+            stats["strength"] = "Not Found"
+            stats["spirit"] = "Not Found"
+            stats["defense"] = "Not Found"
+            stats["speed"] = "Not Found"
+            retry_attempts = 5
+            count = retry_attempts
+
+            try:
+                table = WebDriverWait(base, 25).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "table:nth-of-type(4) > tbody > tr:nth-of-type(2) > td > table > tbody"))
+                )
+                elems = table.find_elements(By.XPATH, "./tr")[1:]
+
+                stats["HP"] = WebDriverWait(elems[0], 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "th:nth-of-type(2) > small"))).text
+                stats["strength"] = WebDriverWait(elems[1], 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "th:nth-of-type(2) > small"))).text
+                stats["spirit"] = WebDriverWait(elems[2], 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "th:nth-of-type(2) > small"))).text
+                stats["defense"] = WebDriverWait(elems[3], 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "th:nth-of-type(2) > small"))).text
+                stats["speed"] = WebDriverWait(elems[4], 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "th:nth-of-type(2) > small"))).text
+            except Exception:
+                print("Stats not found")
+            attributes["stats"] = stats
+
+            yokai.append(attributes)
+    except Exception:
+        pass
+    
+    with open('./../yokai/yokai3.json', 'w') as file:
+        json.dump(yokai, file)
 
 
 

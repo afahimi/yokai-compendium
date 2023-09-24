@@ -1,4 +1,5 @@
 import 'package:app/components/yokai_listing.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,15 @@ import 'dart:convert';
 Future<String> readYokaiFile() async {
   final String fileContent = await rootBundle.loadString('assets/yokai.json');
   return fileContent;
+}
+
+Future<List<Yokai>> fetchYokaiFromFirestore() async {
+  final QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection('yokai').get();
+  List<Yokai> yokaiList = querySnapshot.docs
+      .map((doc) => Yokai.fromJson(doc.data() as Map<String, dynamic>))
+      .toList();
+  return yokaiList;
 }
 
 Future<List<Yokai>> parseYokai() async {
@@ -21,7 +31,9 @@ class YokaiPage extends StatefulWidget {
   final void Function(String) updatePage;
   final void Function(Yokai) updateSelectedYokaiandNavigate;
 
-  const YokaiPage(this.updatePage, this.updateSelectedYokaiandNavigate, {Key? key}) : super(key: key);
+  const YokaiPage(this.updatePage, this.updateSelectedYokaiandNavigate,
+      {Key? key})
+      : super(key: key);
 
   @override
   _YokaiPageState createState() => _YokaiPageState();
@@ -31,11 +43,26 @@ class _YokaiPageState extends State<YokaiPage> {
   @override
   void initState() {
     super.initState();
-    initializeYokai();
+    if (useFireStore) {
+      initializeYokaiFireStore();
+    } else {
+      initializeYokai();
+    }
   }
+
+  bool useFireStore = true;
 
   Future<void> initializeYokai() async {
     yokaiList = await parseYokai();
+    sortedYokaiList = sortYokai(yokaiList, selectedOption);
+    filteredYokaiList = sortedYokaiList.where((yokai) {
+      return yokai.name.toLowerCase().contains(searchQuery.toLowerCase());
+    }).toList();
+    setState(() {});
+  }
+
+  Future<void> initializeYokaiFireStore() async {
+    yokaiList = await fetchYokaiFromFirestore();
     sortedYokaiList = sortYokai(yokaiList, selectedOption);
     filteredYokaiList = sortedYokaiList.where((yokai) {
       return yokai.name.toLowerCase().contains(searchQuery.toLowerCase());
@@ -167,11 +194,11 @@ class _YokaiPageState extends State<YokaiPage> {
                 widget.updateSelectedYokaiandNavigate(yokai);
               },
               child: YokaiListing(
-              number: yokai.number,
-              name: yokai.name,
-              rank: yokai.rank,
-              yokaiClass: yokai.yokaiClass,
-            ),
+                number: yokai.number,
+                name: yokai.name,
+                rank: yokai.rank,
+                yokaiClass: yokai.yokaiClass,
+              ),
             );
           },
         ),
